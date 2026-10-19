@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { Icon, type IconName } from "./Icon";
+import { ThemeToggle } from "./ThemeToggle";
 import { Avatar } from "./ui";
 
 const NAV: { to: string; label: string; icon: IconName; end?: boolean }[] = [
@@ -54,6 +55,7 @@ export function Layout() {
                 <div className="email">{customer?.email}</div>
               </div>
             </div>
+            <ThemeToggle label />
             <button className="btn btn-ghost" onClick={logout}>
               <Icon name="logout" size={18} /> Sign out
             </button>
@@ -63,9 +65,12 @@ export function Layout() {
         <div>
           <div className="mobile-top">
             <Logo />
-            <button className="btn btn-ghost" onClick={logout} aria-label="Sign out">
-              <Icon name="logout" size={20} />
-            </button>
+            <div className="row" style={{ gap: 0 }}>
+              <ThemeToggle />
+              <button className="btn btn-ghost" onClick={logout} aria-label="Sign out">
+                <Icon name="logout" size={20} />
+              </button>
+            </div>
           </div>
           <main className="main">
             <Outlet />

@@ -30,32 +30,31 @@
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #070a16;
-    --surface: rgba(24, 30, 56, 0.5);
-    --surface-2: rgba(255, 255, 255, 0.05);
-    --surface-solid: rgba(18, 23, 44, 0.92);
-    --glass-border: rgba(255, 255, 255, 0.12);
-    --glass-hi: rgba(255, 255, 255, 0.1);
-    --ink: #eef0f8;
-    --ink-2: #bcc2d8;
-    --ink-3: #8991ad;
-    --line: rgba(255, 255, 255, 0.09);
-    --brand: #7b7bff;
-    --brand-ink: #a1a1ff;
-    --brand-soft: #212552;
-    --ok: #34d399;
-    --ok-soft: #10302a;
-    --warn: #fbbf24;
-    --warn-soft: #3a2f10;
-    --bad: #fb7185;
-    --bad-soft: #3b1621;
-    --info-soft: #14274a;
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 8px 28px rgba(0, 0, 0, 0.45);
-    color-scheme: dark;
-  }
+/* Theme is set on <html data-theme> by the inline script in index.html / useTheme */
+:root[data-theme="dark"] {
+  --bg: #070a16;
+  --surface: rgba(24, 30, 56, 0.5);
+  --surface-2: rgba(255, 255, 255, 0.05);
+  --surface-solid: rgba(18, 23, 44, 0.92);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-hi: rgba(255, 255, 255, 0.1);
+  --ink: #eef0f8;
+  --ink-2: #bcc2d8;
+  --ink-3: #8991ad;
+  --line: rgba(255, 255, 255, 0.09);
+  --brand: #7b7bff;
+  --brand-ink: #a1a1ff;
+  --brand-soft: #212552;
+  --ok: #34d399;
+  --ok-soft: #10302a;
+  --warn: #fbbf24;
+  --warn-soft: #3a2f10;
+  --bad: #fb7185;
+  --bad-soft: #3b1621;
+  --info-soft: #14274a;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 28px rgba(0, 0, 0, 0.45);
+  color-scheme: dark;
 }
 
 /* ============ Base ============ */
