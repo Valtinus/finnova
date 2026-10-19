@@ -311,7 +311,8 @@ button { font: inherit; color: inherit; }
   --surface: rgba(24, 30, 56, 0.5); --surface-2: rgba(255, 255, 255, 0.06); --surface-solid: rgba(18, 23, 44, 0.92);
   --glass-border: rgba(255, 255, 255, 0.14); --glass-hi: rgba(255, 255, 255, 0.1);
   --brand: #7b7bff; --brand-ink: #a1a1ff; --bad: #fb7185; --bad-soft: rgba(251, 113, 133, 0.14);
-  --auth-pad: clamp(24px, 4vw, 56px); /* same distance from the left and right edge */
+  --auth-pad: clamp(24px, 4vw, 56px);
+  padding-inline: max(0px, calc((100% - 1180px) / 2)); /* on wide screens the content stays in a centred 1180px column, so both side margins are equal */
   color-scheme: dark; color: var(--ink);
   position: relative; min-height: 100%; display: grid; grid-template-columns: 1.05fr 1fr; background: #0b1020; overflow: hidden;
 }
