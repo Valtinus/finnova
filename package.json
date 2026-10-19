@@ -1,0 +1,23 @@
+{
+  "name": "finnova",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bun run --filter '@finnova/api' dev",
+    "dev:api": "bun run --filter '@finnova/api' dev",
+    "dev:web": "bun run --filter '@finnova/web' dev",
+    "db:migrate": "bun run --filter '@finnova/api' db:migrate",
+    "db:seed": "bun run --filter '@finnova/api' db:seed",
+    "db:reset": "bun run --filter '@finnova/api' db:reset",
+    "test": "bun run --filter '@finnova/api' test",
+    "typecheck": "bun run --filter '*' typecheck"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.3",
+    "typescript": "^5.9.3"
+  }
+}
