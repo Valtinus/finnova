@@ -10,6 +10,11 @@ Digital wallet & payment app for the **FinNova Bank** platform. It was built for
 | Card top-ups through a payment gateway (hosted checkout + signed webhooks) | ✅ API (mock gateway) |
 | Payment history (filters, cursor paging) | ✅ API |
 | Web frontend (login, dashboard, top-up, send, QR receive/scan, history, wallet) | ✅ `apps/web` |
+| Spending insights (money in/out charts) | ⏳ planned, web |
+| Recent recipients on the Send screen | ⏳ planned, web |
+| Share a payment request (QR image + link) | ⏳ planned, web |
+| Statement export (CSV / PDF) | ⏳ planned, web |
+| Notifications (in-app bell) | ⏳ planned, web + API |
 | Decentralized payments | ⏳ `CryptoRail` stub, ready to implement |
 
 **Stack:** Bun · Hono (+ zod-openapi, Swagger UI) · SQLite (`bun:sqlite`) · Drizzle ORM · React 19 + Vite
