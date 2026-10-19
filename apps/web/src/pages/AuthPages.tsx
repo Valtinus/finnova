@@ -1,6 +1,7 @@
 import { useState, type FormEvent, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Icon } from "../components/Icon";
+import { Spheres } from "../components/Spheres";
 import { Alert, Spinner } from "../components/ui";
 import { useAuth } from "../hooks/useAuth";
 import { errorMessage } from "../lib/api";
@@ -15,37 +16,28 @@ const DEMO_PASSWORD = "Password123!";
 function AuthShell({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) {
   return (
     <div className="auth">
-      <section className="auth-hero">
-        <div className="logo">
-          <div className="logo-mark">F</div>
-          FinNova
-        </div>
-        <div>
-          <h2>Money that moves as fast as you do.</h2>
-          <p>Top up by card, send to friends in seconds and get paid with a QR code, all from one wallet.</p>
-          <div className="hero-list">
-            <div>
-              <span className="ico"><Icon name="zap" size={18} /></span> Instant wallet-to-wallet transfers
-            </div>
-            <div>
-              <span className="ico"><Icon name="qr" size={18} /></span> Request and pay with signed QR codes
-            </div>
-            <div>
-              <span className="ico"><Icon name="shield" size={18} /></span> Idempotent, double-entry ledger
-            </div>
+      <Spheres interactive />
+      <div className="auth-inner">
+        <div className="auth-brand">
+          <div className="logo">
+            <div className="logo-mark">F</div>
+            FinNova
           </div>
+          <p>Top up by card, send in seconds and get paid with a QR code, all from one wallet.</p>
         </div>
-        <p className="small" style={{ opacity: 0.55, marginTop: 0 }}>FinNova Bank · demo environment</p>
-      </section>
-      <section className="auth-form">
-        <div className="inner">
+        <section className="card auth-card">
           <div>
             <h1>{title}</h1>
             <p className="muted" style={{ marginTop: 4 }}>{subtitle}</p>
           </div>
           {children}
+        </section>
+        <div className="auth-points">
+          <span><Icon name="zap" size={14} /> Instant transfers</span>
+          <span><Icon name="qr" size={14} /> Signed QR payments</span>
+          <span><Icon name="shield" size={14} /> Double-entry ledger</span>
         </div>
-      </section>
+      </div>
     </div>
   );
 }
