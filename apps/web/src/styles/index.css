@@ -311,6 +311,7 @@ button { font: inherit; color: inherit; }
   --surface: rgba(24, 30, 56, 0.5); --surface-2: rgba(255, 255, 255, 0.06); --surface-solid: rgba(18, 23, 44, 0.92);
   --glass-border: rgba(255, 255, 255, 0.14); --glass-hi: rgba(255, 255, 255, 0.1);
   --brand: #7b7bff; --brand-ink: #a1a1ff; --bad: #fb7185; --bad-soft: rgba(251, 113, 133, 0.14);
+  --auth-pad: clamp(24px, 4vw, 56px); /* same distance from the left and right edge */
   color-scheme: dark; color: var(--ink);
   position: relative; min-height: 100%; display: grid; grid-template-columns: 1.05fr 1fr; background: #0b1020; overflow: hidden;
 }
@@ -323,19 +324,20 @@ button { font: inherit; color: inherit; }
 .blob.b2 { --depth: -60; --dur: 22s; --fx: -30px; --fy: 20px; --c: radial-gradient(circle at 50% 50%, #2563eb 0%, rgba(37, 99, 235, 0) 68%); width: 56vw; height: 56vw; left: -16vw; bottom: -24vw; }
 .blob.b3 { --depth: 36; --dur: 16s; --fy: 26px; --c: radial-gradient(circle at 50% 50%, #8b5cf6 0%, rgba(139, 92, 246, 0) 66%); width: 36vw; height: 36vw; right: 6vw; bottom: -10vw; }
 .blob.b4 { --depth: -30; --dur: 19s; --fx: 20px; --c: radial-gradient(circle at 50% 50%, #9333ea 0%, rgba(147, 51, 234, 0) 66%); width: 26vw; height: 26vw; left: 30vw; top: -8vw; opacity: 0.55; }
-.auth-hero { position: relative; z-index: 1; padding: 48px; display: flex; flex-direction: column; justify-content: space-between; }
+.auth-hero { position: relative; z-index: 1; padding: var(--auth-pad); display: flex; flex-direction: column; justify-content: space-between; }
 .auth-hero h2 { font-size: clamp(28px, 3.4vw, 42px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.12; max-width: 14em; }
 .auth-hero p { opacity: 0.75; margin-top: 14px; max-width: 32em; }
 .hero-list { display: grid; gap: 12px; margin-top: 28px; }
 .hero-list div { display: flex; gap: 12px; align-items: center; font-weight: 550; }
 .hero-list .ico { width: 34px; height: 34px; border-radius: 10px; background: rgba(255, 255, 255, 0.12); display: grid; place-items: center; }
-.auth-form { position: relative; z-index: 1; display: grid; place-items: center; padding: 32px 20px; }
+.auth-form { position: relative; z-index: 1; display: grid; place-items: center end; padding: 32px var(--auth-pad); }
 .auth-card { width: 100%; max-width: 420px; padding: 28px; display: grid; gap: 20px; border-radius: 26px; }
 .demo { display: grid; gap: 8px; padding: 14px; border: 1px dashed var(--line); border-radius: 14px; background: var(--surface-2); }
 .demo-btns { display: flex; gap: 8px; flex-wrap: wrap; }
 @media (max-width: 860px) {
   .auth { grid-template-columns: 1fr; }
-  .auth-hero { padding: 28px 22px 4px; gap: 20px; }
+  .auth-hero { padding: 28px var(--auth-pad) 4px; gap: 20px; }
+  .auth-form { place-items: center; }
   .auth-hero .hero-list { display: none; }
   .blob.b1 { width: 110vw; height: 110vw; }
   .blob.b2 { width: 100vw; height: 100vw; }
