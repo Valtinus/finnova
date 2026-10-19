@@ -15,7 +15,6 @@
   --brand: #5b5bf0;
   --brand-ink: #4545d6;
   --brand-soft: #eceefe;
-  --cyan: #22d3ee;
   --ok: #0f9d6b;
   --ok-soft: #e3f7ef;
   --warn: #b7791f;
@@ -96,7 +95,7 @@ button { font: inherit; color: inherit; }
 .logo { display: flex; align-items: center; gap: 10px; padding: 0 8px 18px; font-weight: 700; font-size: 18px; letter-spacing: -0.02em; }
 .logo-mark {
   width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; color: #fff; font-weight: 800;
-  background: linear-gradient(135deg, #6366f1, #22d3ee);
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
 }
 .nav { display: grid; gap: 4px; }
 .nav a {
@@ -153,7 +152,7 @@ button { font: inherit; color: inherit; }
 .balance-card {
   position: relative; overflow: hidden; border-radius: 22px; padding: 26px; color: #fff;
   background: radial-gradient(120% 140% at 100% 0%, #3b3bd8 0%, rgba(59, 59, 216, 0) 55%),
-    radial-gradient(90% 120% at 0% 100%, #0e7490 0%, rgba(14, 116, 144, 0) 60%), #0b1020;
+    radial-gradient(90% 120% at 0% 100%, #1d4ed8 0%, rgba(29, 78, 216, 0) 60%), #0b1020;
   box-shadow: 0 18px 44px rgba(30, 30, 120, 0.28);
 }
 .balance-card::after {
@@ -322,9 +321,9 @@ button { font: inherit; color: inherit; }
 .blob i { display: block; width: 100%; height: 100%; border-radius: 50%; animation: float var(--dur, 18s) ease-in-out infinite alternate; background: var(--c); }
 @keyframes float { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(var(--fx, 24px), var(--fy, -30px), 0) scale(1.08); } }
 .blob.b1 { --depth: 50; --c: radial-gradient(circle at 40% 40%, #5b5bf0 0%, rgba(79, 70, 229, 0) 68%); width: 62vw; height: 62vw; right: -14vw; top: -22vw; }
-.blob.b2 { --depth: -60; --dur: 22s; --fx: -30px; --fy: 20px; --c: radial-gradient(circle at 50% 50%, #0ea5c6 0%, rgba(8, 145, 178, 0) 68%); width: 56vw; height: 56vw; left: -16vw; bottom: -24vw; }
+.blob.b2 { --depth: -60; --dur: 22s; --fx: -30px; --fy: 20px; --c: radial-gradient(circle at 50% 50%, #2563eb 0%, rgba(37, 99, 235, 0) 68%); width: 56vw; height: 56vw; left: -16vw; bottom: -24vw; }
 .blob.b3 { --depth: 36; --dur: 16s; --fy: 26px; --c: radial-gradient(circle at 50% 50%, #8b5cf6 0%, rgba(139, 92, 246, 0) 66%); width: 36vw; height: 36vw; right: 6vw; bottom: -10vw; }
-.blob.b4 { --depth: -30; --dur: 19s; --fx: 20px; --c: radial-gradient(circle at 50% 50%, #ec4899 0%, rgba(236, 72, 153, 0) 66%); width: 26vw; height: 26vw; left: 30vw; top: -8vw; opacity: 0.55; }
+.blob.b4 { --depth: -30; --dur: 19s; --fx: 20px; --c: radial-gradient(circle at 50% 50%, #9333ea 0%, rgba(147, 51, 234, 0) 66%); width: 26vw; height: 26vw; left: 30vw; top: -8vw; opacity: 0.55; }
 .auth-hero { position: relative; z-index: 1; padding: 48px; display: flex; flex-direction: column; justify-content: space-between; }
 .auth-hero h2 { font-size: clamp(28px, 3.4vw, 42px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.12; max-width: 14em; }
 .auth-hero p { opacity: 0.75; margin-top: 14px; max-width: 32em; }
