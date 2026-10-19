@@ -27,4 +27,6 @@ Set `VITE_API_URL` (see `.env.example`) if the API is not on `http://localhost:3
 | `/history` | Filters, load more, receipt dialog | `GET /transactions`, `GET /transactions/:id` |
 | `/wallet` | Nickname, freeze/unfreeze, statement | `PATCH /wallet`, `GET /wallet/ledger` |
 
+Light and dark themes follow the system setting by default; the toggle in the sidebar (or the top bar on mobile) overrides it and is remembered.
+
 Every payment form generates one `Idempotency-Key` per attempt, so a double click or retry never pays twice.

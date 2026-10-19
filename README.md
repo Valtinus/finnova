@@ -15,6 +15,7 @@ Digital wallet & payment app for the **FinNova Bank** platform. It was built for
 | Share a payment request (QR image + link) | ⏳ planned, web |
 | Statement export (CSV / PDF) | ⏳ planned, web |
 | Notifications (in-app bell) | ⏳ planned, web + API |
+| Multiple currency accounts (EUR, USD, HUF, …) | ⏳ planned, web + API |
 | Decentralized payments | ⏳ `CryptoRail` stub, ready to implement |
 
 **Stack:** Bun · Hono (+ zod-openapi, Swagger UI) · SQLite (`bun:sqlite`) · Drizzle ORM · React 19 + Vite
@@ -154,6 +155,7 @@ Planned next, in suggested order:
 | 3 | **Share a payment request**: download/share the QR as an image, copy a deep link | web | Uses the public `GET /qr/:id/image.png`. Useful for the merchant (Café) flow. |
 | 4 | **Statement export**: CSV and PDF of the filtered Activity list or a date range | web (+ optional API) | CSV client-side from the loaded pages; PDF via print stylesheet. A `GET /transactions/export` endpoint would avoid paging in the browser. |
 | 5 | **Notifications**: in-app bell with unread count for incoming money, paid QR requests and failed top-ups | web + API | Start with polling a `GET /notifications` feed, move to server-sent events if needed. Needs a `notifications` table. |
+| 6 | **Multiple currency accounts** (EUR, USD, HUF, …): one wallet per currency per customer, an account switcher, and currency conversion between your own accounts | web + API | Today the API assumes one EUR wallet per customer (`CURRENCY` constant, `/wallet` returns a single wallet). Needs: a `currency` list in `@finnova/shared`, several wallets per customer (unique per currency), `?currency=`/wallet id on wallet, top-up, transfer, QR and ledger endpoints, per-currency formatting and limits (HUF has no minor unit in practice), a mock FX rate source with a `POST /wallet/convert` that debits one wallet and credits another atomically, and per-currency ledger accounts so each currency still balances. Transfers stay same-currency at first. |
 
 Not planned yet: decentralized payments (`CryptoRail`).
 
