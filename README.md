@@ -138,6 +138,20 @@ Pass `returnUrl` (for example `http://localhost:5173/wallet`) to `POST /topups`,
 3. The payer calls `POST /qr/pay`. Settlement and marking the request `PAID` happen in **one DB transaction**, so a QR can't be paid twice. Requests expire (default 15 min) and can be cancelled.
 4. The signature (HMAC over id + amount + payee) rejects forged or tampered codes.
 
+## Roadmap
+
+Planned next, in suggested order:
+
+| # | Feature | Where | Notes |
+|---|---|---|---|
+| 1 | **Spending insights**: money in vs. out by week/month, split by type (top-up, transfer, QR) | web | Charts built from `GET /transactions` (and the statement). No API change needed at first; a server-side aggregate endpoint can follow if paging gets expensive. |
+| 2 | **Recent recipients**: quick-pick avatars on the Send screen | web | Derived from past outgoing transfers. Pinning favourites can come later. |
+| 3 | **Share a payment request**: download/share the QR as an image, copy a deep link | web | Uses the public `GET /qr/:id/image.png`. Useful for the merchant (Café) flow. |
+| 4 | **Statement export**: CSV and PDF of the filtered Activity list or a date range | web (+ optional API) | CSV client-side from the loaded pages; PDF via print stylesheet. A `GET /transactions/export` endpoint would avoid paging in the browser. |
+| 5 | **Notifications**: in-app bell with unread count for incoming money, paid QR requests and failed top-ups | web + API | Start with polling a `GET /notifications` feed, move to server-sent events if needed. Needs a `notifications` table. |
+
+Not planned yet: decentralized payments (`CryptoRail`).
+
 ---
 
 ## API overview
