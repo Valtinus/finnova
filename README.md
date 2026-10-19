@@ -9,10 +9,10 @@ Digital wallet & payment app for the **FinNova Bank** platform. It was built for
 | QR payments (signed payment requests, PNG QR codes) | ✅ API |
 | Card top-ups through a payment gateway (hosted checkout + signed webhooks) | ✅ API (mock gateway) |
 | Payment history (filters, cursor paging) | ✅ API |
-| Web frontend | ⏳ `apps/web` (empty, see its README) |
+| Web frontend (login, dashboard, top-up, send, QR receive/scan, history, wallet) | ✅ `apps/web` |
 | Decentralized payments | ⏳ `CryptoRail` stub, ready to implement |
 
-**Stack:** Bun · Hono (+ zod-openapi, Swagger UI) · SQLite (`bun:sqlite`) · Drizzle ORM · React (planned)
+**Stack:** Bun · Hono (+ zod-openapi, Swagger UI) · SQLite (`bun:sqlite`) · Drizzle ORM · React 19 + Vite
 
 ---
 
@@ -23,6 +23,7 @@ bun install
 cp apps/api/.env.example apps/api/.env   # optional, defaults work
 bun run db:reset                         # create DB + demo data
 bun run dev                              # API on http://localhost:3000
+bun run dev:web                          # web app on http://localhost:5173
 ```
 
 Open **http://localhost:3000/docs** for Swagger UI.
@@ -46,6 +47,8 @@ The seed script also prints an **open QR payload** (€3.20 croissant) you can p
 | Command | What it does |
 |---|---|
 | `bun run dev` | API with hot reload |
+| `bun run dev:web` | React frontend (Vite) on :5173 |
+| `bun run --filter @finnova/web build` | Production build of the frontend |
 | `bun run test` | End-to-end API tests (in-memory DB) |
 | `bun run typecheck` | TypeScript across all workspaces |
 | `bun run db:reset` | Delete DB, migrate, and seed demo data |
@@ -76,7 +79,7 @@ finnova/
 │  │  │  ├─ middleware/        JWT auth
 │  │  │  └─ lib/               errors, ids, formatting, router factory
 │  │  └─ test/                 bun test suites
-│  └─ web/                     React frontend (to do, folders prepared)
+│  └─ web/                     React + Vite frontend (ready)
 ├─ packages/
 │  └─ shared/                  domain constants, money helpers, PaymentRail interface
 └─ docs/screenshots/           put deliverable screenshots here
@@ -172,4 +175,4 @@ Save screenshots to `docs/screenshots/`:
 6. **Payment history:** the filtered list with status chips.
 7. **Swagger UI:** an overview of all endpoints.
 
-Until the frontend exists, steps 2 and 3 already work in the browser (the checkout page), and the rest can be shown in Swagger UI.
+Every step above can be captured in the web app (`bun run dev:web`); Swagger UI covers the endpoint overview.
