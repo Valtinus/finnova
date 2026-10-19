@@ -1,7 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { Icon, type IconName } from "./Icon";
-import { Spheres } from "./Spheres";
 import { Avatar } from "./ui";
 
 const NAV: { to: string; label: string; icon: IconName; end?: boolean }[] = [
@@ -36,7 +35,6 @@ export function Layout() {
 
   return (
     <>
-      <Spheres />
       <div className="shell">
         <aside className="sidebar">
           <Logo />
