@@ -1,0 +1,188 @@
+{
+  "contractName": "FinNovaBank",
+  "compiler": "0.8.28+commit.7893614a.Emscripten.clang",
+  "evmVersion": "paris",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newBalance",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "Deposited",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newBalance",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "Withdrawn",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "checkBalance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "deposit",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalDeposits",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transfer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "withdraw",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive"
+    }
+  ],
+  "bytecode": "0x6080604052348015600f57600080fd5b506106928061001f6000396000f3fe6080604052600436106100595760003560e01c80632e1a7d4d1461006d57806370a082311461008d5780637d882097146100d5578063a9059cbb146100e8578063c71daccb14610108578063d0e30db01461012a57600080fd5b3661006857610066610132565b005b600080fd5b34801561007957600080fd5b50610066610088366004610599565b610203565b34801561009957600080fd5b506100c36100a83660046105ce565b6001600160a01b031660009081526020819052604090205490565b60405190815260200160405180910390f35b3480156100e157600080fd5b50476100c3565b3480156100f457600080fd5b506100666101033660046105f0565b6103ad565b34801561011457600080fd5b50336000908152602081905260409020546100c3565b61006661058f565b600034116101915760405162461bcd60e51b815260206004820152602160248201527f4465706f736974206d7573742062652067726561746572207468616e207a65726044820152606f60f81b60648201526084015b60405180910390fd5b33600090815260208190526040812080543492906101b0908490610630565b9091555050336000818152602081815260409182902054825134815291820152428183015290517f91ede45f04a37a7c170f5c1207df3b6bc748dc1e04ad5e917a241d0f52feada39181900360600190a2565b600081116102535760405162461bcd60e51b815260206004820181905260248201527f416d6f756e74206d7573742062652067726561746572207468616e207a65726f6044820152606401610188565b336000908152602081905260409020548111156102a95760405162461bcd60e51b8152602060048201526014602482015273496e73756666696369656e742062616c616e636560601b6044820152606401610188565b33600090815260208190526040812080548392906102c8908490610649565b9091555050336000818152602081815260409182902054825185815291820152428183015290517f75e161b3e824b114fc1a33274bd7091918dd4e639cede50b78b15a4eea956a219181900360600190a2604051600090339083908381818185875af1925050503d806000811461035b576040519150601f19603f3d011682016040523d82523d6000602084013e610360565b606091505b50509050806103a95760405162461bcd60e51b8152602060048201526015602482015274115d1a195c881d1c985b9cd9995c8819985a5b1959605a1b6044820152606401610188565b5050565b6001600160a01b0382166103f75760405162461bcd60e51b8152602060048201526011602482015270125b9d985b1a59081c9958da5c1a595b9d607a1b6044820152606401610188565b336001600160a01b0383160361044f5760405162461bcd60e51b815260206004820152601b60248201527f43616e6e6f74207472616e7366657220746f20796f757273656c6600000000006044820152606401610188565b6000811161049f5760405162461bcd60e51b815260206004820181905260248201527f416d6f756e74206d7573742062652067726561746572207468616e207a65726f6044820152606401610188565b336000908152602081905260409020548111156104f55760405162461bcd60e51b8152602060048201526014602482015273496e73756666696369656e742062616c616e636560601b6044820152606401610188565b3360009081526020819052604081208054839290610514908490610649565b90915550506001600160a01b03821660009081526020819052604081208054839290610541908490610630565b9091555050604080518281524260208201526001600160a01b0384169133917f18d62fb566bbc5565888ee7f280d21e62d398373f26d05401c3d6587fcc95c5c910160405180910390a35050565b610597610132565b565b6000602082840312156105ab57600080fd5b5035919050565b80356001600160a01b03811681146105c957600080fd5b919050565b6000602082840312156105e057600080fd5b6105e9826105b2565b9392505050565b6000806040838503121561060357600080fd5b61060c836105b2565b946020939093013593505050565b634e487b7160e01b600052601160045260246000fd5b808201808211156106435761064361061a565b92915050565b818103818111156106435761064361061a56fea2646970667358221220ff488595c05e5581832b69269520345c2e61ae02df10e3d52d334d384a12ce4764736f6c634300081c0033"
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@finnova/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "compile": "bun scripts/compile.ts",
+    "chain": "ganache --wallet.deterministic --chain.chainId 1337 --server.port 8545",
+    "deploy": "bun scripts/deploy.ts",
+    "test": "bun test",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "ethers": "^6.15.0"
+  },
+  "devDependencies": {
+    "ganache": "^7.9.2",
+    "solc": "0.8.28"
+  }
+}

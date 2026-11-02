@@ -10,15 +10,17 @@ Digital wallet & payment app for the **FinNova Bank** platform. It was built for
 | Card top-ups through a payment gateway (hosted checkout + signed webhooks) | ✅ API (mock gateway) |
 | Payment history (filters, cursor paging) | ✅ API |
 | Web frontend (login, dashboard, top-up, send, QR receive/scan, history, wallet) | ✅ `apps/web` |
+| Smart contract: deposit, withdraw, transfer, check balance (Solidity, Remix, Ganache) | ✅ `packages/contracts` |
+| Blockchain banking DApp (MetaMask wallet, deposit, transfer, balance, on-chain history) | ✅ `apps/dapp` |
 | Spending insights (money in/out charts) | ⏳ planned, web |
 | Recent recipients on the Send screen | ⏳ planned, web |
 | Share a payment request (QR image + link) | ⏳ planned, web |
 | Statement export (CSV / PDF) | ⏳ planned, web |
 | Notifications (in-app bell) | ⏳ planned, web + API |
 | Multiple currency accounts (EUR, USD, HUF, …) | ⏳ planned, web + API |
-| Decentralized payments | ⏳ `CryptoRail` stub, ready to implement |
+| Decentralized payments in the API | ⏳ `CryptoRail` stub, ready to implement |
 
-**Stack:** Bun · Hono (+ zod-openapi, Swagger UI) · SQLite (`bun:sqlite`) · Drizzle ORM · React 19 + Vite
+**Stack:** Bun · Hono (+ zod-openapi, Swagger UI) · SQLite (`bun:sqlite`) · Drizzle ORM · React 19 + Vite · Solidity 0.8 + Ganache · ethers.js 6
 
 ---
 
@@ -48,6 +50,19 @@ Demo accounts (all use `Password123!`):
 
 The seed script also prints an **open QR payload** (€3.20 croissant) you can pay right away via `POST /qr/pay`.
 
+### Blockchain: smart contract + DApp
+
+These run on their own and don't need the API.
+
+```bash
+bun run chain              # local Ganache chain on http://127.0.0.1:8545 (chain id 1337); keep it running
+bun run contracts:deploy   # deploy FinNovaBank.sol and point the DApp at it
+bun run dev:dapp           # DApp on http://localhost:5174 (needs MetaMask)
+```
+
+- [`packages/contracts/README.md`](packages/contracts/README.md): the contract, the Remix + MetaMask walkthrough (Lab 10), test accounts and troubleshooting.
+- [`apps/dapp/README.md`](apps/dapp/README.md): the DApp features and setup (Lab 11).
+
 ## Scripts (from repo root)
 
 | Command | What it does |
@@ -55,7 +70,11 @@ The seed script also prints an **open QR payload** (€3.20 croissant) you can p
 | `bun run dev` | API with hot reload |
 | `bun run dev:web` | React frontend (Vite) on :5173 |
 | `bun run --filter @finnova/web build` | Production build of the frontend |
-| `bun run test` | End-to-end API tests (in-memory DB) |
+| `bun run dev:dapp` | Blockchain DApp (Vite) on :5174 |
+| `bun run chain` | Local Ganache blockchain on :8545, 10 funded test accounts |
+| `bun run contracts:deploy` | Deploy `FinNovaBank` to the local chain, write the address for the DApp |
+| `bun run contracts:compile` | Recompile `FinNovaBank.sol` into `packages/contracts/artifacts/` |
+| `bun run test` | End-to-end API tests (in-memory DB) and smart contract tests (in-process Ganache) |
 | `bun run typecheck` | TypeScript across all workspaces |
 | `bun run db:reset` | Delete DB, migrate, and seed demo data |
 | `bun run db:seed` | Seed only (skips if data exists) |
@@ -85,9 +104,11 @@ finnova/
 │  │  │  ├─ middleware/        JWT auth
 │  │  │  └─ lib/               errors, ids, formatting, router factory
 │  │  └─ test/                 bun test suites
-│  └─ web/                     React + Vite frontend (ready)
+│  ├─ web/                     React + Vite frontend (ready)
+│  └─ dapp/                    React + ethers.js DApp for the smart contract (reuses the web design system)
 ├─ packages/
-│  └─ shared/                  domain constants, money helpers, PaymentRail interface
+│  ├─ shared/                  domain constants, money helpers, PaymentRail interface
+│  └─ contracts/               FinNovaBank.sol, compiled ABI, compile/deploy scripts, contract tests
 └─ docs/screenshots/           put deliverable screenshots here
 ```
 
@@ -157,7 +178,7 @@ Planned next, in suggested order:
 | 5 | **Notifications**: in-app bell with unread count for incoming money, paid QR requests and failed top-ups | web + API | Start with polling a `GET /notifications` feed, move to server-sent events if needed. Needs a `notifications` table. |
 | 6 | **Multiple currency accounts** (EUR, USD, HUF, …): one wallet per currency per customer, an account switcher, and currency conversion between your own accounts | web + API | Today the API assumes one EUR wallet per customer (`CURRENCY` constant, `/wallet` returns a single wallet). Needs: a `currency` list in `@finnova/shared`, several wallets per customer (unique per currency), `?currency=`/wallet id on wallet, top-up, transfer, QR and ledger endpoints, per-currency formatting and limits (HUF has no minor unit in practice), a mock FX rate source with a `POST /wallet/convert` that debits one wallet and credits another atomically, and per-currency ledger accounts so each currency still balances. Transfers stay same-currency at first. |
 
-Not planned yet: decentralized payments (`CryptoRail`).
+Not planned yet: decentralized payments in the API (`CryptoRail`). The smart contract and DApp run separately from the API for now.
 
 ---
 
@@ -197,3 +218,8 @@ Save screenshots to `docs/screenshots/`:
 7. **Swagger UI:** an overview of all endpoints.
 
 Every step above can be captured in the web app (`bun run dev:web`); Swagger UI covers the endpoint overview.
+
+The blockchain labs have their own checklists:
+
+- **Lab 10, smart contract** (Remix, MetaMask, deployment, deposit / withdraw / transfer / balance): see the [contracts README](packages/contracts/README.md#screenshot-checklist-lab-10-deliverable), saved to `docs/screenshots/lab10/`.
+- **Lab 11, DApp** (wallet connection, deposit, transfer, balance, history): see the [DApp README](apps/dapp/README.md#screenshot-checklist-lab-11-deliverable), saved to `docs/screenshots/lab11/`.

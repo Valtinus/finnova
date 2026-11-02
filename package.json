@@ -10,10 +10,14 @@
     "dev": "bun run --filter '@finnova/api' dev",
     "dev:api": "bun run --filter '@finnova/api' dev",
     "dev:web": "bun run --filter '@finnova/web' dev",
+    "dev:dapp": "bun run --filter '@finnova/dapp' dev",
+    "chain": "bun run --filter '@finnova/contracts' chain",
+    "contracts:compile": "bun run --filter '@finnova/contracts' compile",
+    "contracts:deploy": "bun run --filter '@finnova/contracts' deploy",
     "db:migrate": "bun run --filter '@finnova/api' db:migrate",
     "db:seed": "bun run --filter '@finnova/api' db:seed",
     "db:reset": "bun run --filter '@finnova/api' db:reset",
-    "test": "bun run --filter '@finnova/api' test",
+    "test": "bun run --filter '@finnova/api' --filter '@finnova/contracts' test",
     "typecheck": "bun run --filter '*' typecheck"
   },
   "devDependencies": {
