@@ -119,6 +119,38 @@ export const QrRequestSchema = z
   })
   .openapi("QrRequest");
 
+/* ---------- blockchain ---------- */
+
+export const EthAddressSchema = z
+  .string()
+  .regex(/^0x[0-9a-fA-F]{40}$/, "Not an Ethereum address (0x followed by 40 hex digits)")
+  .openapi({ example: "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1" });
+
+export const ChainAccountSchema = z
+  .object({
+    address: z.string().openapi({ example: "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1" }),
+    linkedAt: z.string(),
+  })
+  .openapi("ChainAccount");
+
+export const LinkChallengeSchema = z
+  .object({
+    address: z.string().openapi({ description: "Checksummed form of the requested address" }),
+    message: z.string().openapi({ description: "Sign exactly this text with the wallet (personal_sign)" }),
+    issuedAt: z.string().openapi({ description: "Send it back unchanged with the signature" }),
+    expiresAt: z.string(),
+  })
+  .openapi("LinkChallenge");
+
+export const ChainPartySchema = z
+  .object({
+    customerId: z.string(),
+    name: z.string().openapi({ example: "Bob Nagy" }),
+    email: z.string().openapi({ example: "bo***@finnova.test" }),
+    address: z.string().openapi({ example: "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0" }),
+  })
+  .openapi("ChainParty");
+
 export const errorResponses = {
   400: { description: "Validation error", content: { "application/json": { schema: ErrorSchema } } },
   401: { description: "Missing or invalid token", content: { "application/json": { schema: ErrorSchema } } },

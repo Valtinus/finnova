@@ -6,10 +6,15 @@
  *   alice@finnova.test / Password123!
  *   bob@finnova.test   / Password123!
  *   cafe@finnova.test  / Password123!   (merchant receiving QR payments)
+ *
+ * Bob's FinNova account is linked to Ganache test account 1 (`bun run chain` is deterministic),
+ * so on-chain transfers to bob@finnova.test work straight away. Alice links hers in the demo.
  */
 import { eq } from "drizzle-orm";
+import { Wallet } from "ethers";
 import { createApp } from "../app";
 import { TEST_CARDS } from "../gateway/mock-gateway";
+import { createLinkChallenge, linkChainAccount } from "../services/chain-accounts";
 import { registerCustomer } from "../services/customers";
 import { createTopup, createTransfer } from "../services/payments";
 import { buildPayload, createQrRequest, payQr } from "../services/qr";
@@ -71,6 +76,15 @@ const openQr = await createQrRequest(deps, cafe.customer.id, {
   expiresInSeconds: 86_400,
 });
 
+// Link Bob's wallet the same way the web app does: sign the challenge with the wallet's key
+const GANACHE_ACCOUNT_1 = new Wallet("0x6cbed15c793ce57650b9877cf6fa156fbef513c4e6134f022a85b1ffdd59b2a1");
+const challenge = createLinkChallenge(db, config, bob.customer.id, GANACHE_ACCOUNT_1.address);
+linkChainAccount(db, config, bob.customer.id, {
+  address: challenge.address,
+  issuedAt: challenge.issuedAt,
+  signature: await GANACHE_ACCOUNT_1.signMessage(challenge.message),
+});
+
 const qr = db.select().from(qrRequests).where(eq(qrRequests.id, openQr.id)).get()!;
 
 console.log(`
@@ -80,6 +94,9 @@ console.log(`
     alice@finnova.test   €238.00
     bob@finnova.test     €107.50
     cafe@finnova.test    merchant, €4.50
+
+  Blockchain: bob@finnova.test is linked to Ganache account 1 (${GANACHE_ACCOUNT_1.address});
+  link Alice's wallet on the Blockchain page.
 
   Open QR payment request (€3.20, valid 24h) — pay it as Alice or Bob via POST /qr/pay:
     ${buildPayload(config.qrSigningSecret, qr)}

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import type { Bank } from "../hooks/useBank";
-import { formatEth } from "../lib/eth";
-import { Skeleton } from "../ui";
+import { Skeleton } from "../components/ui";
+import { formatEth } from "./eth";
+import type { Bank } from "./useBank";
 
 /** The account balance at the bank (checkBalance()), next to the ETH still in the MetaMask wallet. */
 export function BankBalanceCard({ bank }: { bank: Bank }) {

@@ -139,8 +139,25 @@ export const gatewaySessions = sqliteTable("gateway_sessions", {
   ...timestamps,
 });
 
+/**
+ * The blockchain wallet (MetaMask address) a customer has linked to their FinNova account, after
+ * proving they own it by signing a message. One address per customer, one customer per address.
+ */
+export const chainAccounts = sqliteTable("chain_accounts", {
+  customerId: text("customer_id")
+    .primaryKey()
+    .references(() => customers.id),
+  /** checksummed (EIP-55) address; `address_key` is its lowercase form for unique lookups */
+  address: text("address").notNull(),
+  addressKey: text("address_key").notNull().unique(),
+  linkedAt: text("linked_at")
+    .notNull()
+    .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+});
+
 export type Customer = typeof customers.$inferSelect;
 export type Wallet = typeof wallets.$inferSelect;
 export type Transaction = typeof transactions.$inferSelect;
 export type QrRequest = typeof qrRequests.$inferSelect;
 export type GatewaySession = typeof gatewaySessions.$inferSelect;
+export type ChainAccount = typeof chainAccounts.$inferSelect;

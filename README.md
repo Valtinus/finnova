@@ -11,14 +11,15 @@ Digital wallet & payment app for the **FinNova Bank** platform. It was built for
 | Payment history (filters, cursor paging) | ✅ API |
 | Web frontend (login, dashboard, top-up, send, QR receive/scan, history, wallet) | ✅ `apps/web` |
 | Smart contract: deposit, withdraw, transfer, check balance (Solidity, Remix, Ganache) | ✅ `packages/contracts` |
-| Blockchain banking DApp (MetaMask wallet, deposit, transfer, balance, on-chain history) | ✅ `apps/dapp` |
+| Blockchain banking DApp in the web app (MetaMask, deposit, withdraw, transfer, balance, on-chain history) | ✅ `apps/web` → **Blockchain** page |
+| Blockchain wallet linked to the FinNova account (signed message), on-chain transfers by email / phone, on-chain balance on the dashboard | ✅ API + web |
 | Spending insights (money in/out charts) | ⏳ planned, web |
 | Recent recipients on the Send screen | ⏳ planned, web |
 | Share a payment request (QR image + link) | ⏳ planned, web |
 | Statement export (CSV / PDF) | ⏳ planned, web |
 | Notifications (in-app bell) | ⏳ planned, web + API |
 | Multiple currency accounts (EUR, USD, HUF, …) | ⏳ planned, web + API |
-| Decentralized payments in the API | ⏳ `CryptoRail` stub, ready to implement |
+| On-chain money in the EUR wallet and ledger (settlement through the API) | ⏳ `CryptoRail` stub, ready to implement |
 
 **Stack:** Bun · Hono (+ zod-openapi, Swagger UI) · SQLite (`bun:sqlite`) · Drizzle ORM · React 19 + Vite · Solidity 0.8 + Ganache · ethers.js 6
 
@@ -50,18 +51,20 @@ Demo accounts (all use `Password123!`):
 
 The seed script also prints an **open QR payload** (€3.20 croissant) you can pay right away via `POST /qr/pay`.
 
-### Blockchain: smart contract + DApp
+### Blockchain: smart contract + Blockchain page
 
-These run on their own and don't need the API.
+The DApp is part of the web app: sign in, then open **Blockchain** in the sidebar (or **Open** on the dashboard's *Blockchain account* card). Start the API and the web app as above, plus the chain:
 
 ```bash
 bun run chain              # local Ganache chain on http://127.0.0.1:8545 (chain id 1337); keep it running
-bun run contracts:deploy   # deploy FinNovaBank.sol and point the DApp at it
-bun run dev:dapp           # DApp on http://localhost:5174 (needs MetaMask)
+bun run contracts:deploy   # deploy FinNovaBank.sol, write its address to apps/web/.env.local
+bun run dev:web            # (re)start the web app so it picks up the address
 ```
 
+In MetaMask, add the network `Localhost 8545` (RPC `http://127.0.0.1:8545`, chain ID `1337`, symbol `ETH`) and import Ganache test accounts 0 and 1. Their private keys are in the [contracts README](packages/contracts/README.md#option-b-from-the-command-line). The seed links **Bob's** FinNova account to account 1, so you can sign in as Alice, link account 0 and send ether to `bob@finnova.test`.
+
 - [`packages/contracts/README.md`](packages/contracts/README.md): the contract, the Remix + MetaMask walkthrough (Lab 10), test accounts and troubleshooting.
-- [`apps/dapp/README.md`](apps/dapp/README.md): the DApp features and setup (Lab 11).
+- [Blockchain integration](#blockchain-integration) below: how the page, the API and the contract fit together (Lab 11).
 
 ## Scripts (from repo root)
 
@@ -70,9 +73,8 @@ bun run dev:dapp           # DApp on http://localhost:5174 (needs MetaMask)
 | `bun run dev` | API with hot reload |
 | `bun run dev:web` | React frontend (Vite) on :5173 |
 | `bun run --filter @finnova/web build` | Production build of the frontend |
-| `bun run dev:dapp` | Blockchain DApp (Vite) on :5174 |
 | `bun run chain` | Local Ganache blockchain on :8545, 10 funded test accounts |
-| `bun run contracts:deploy` | Deploy `FinNovaBank` to the local chain, write the address for the DApp |
+| `bun run contracts:deploy` | Deploy `FinNovaBank` to the local chain, write its address to `apps/web/.env.local` |
 | `bun run contracts:compile` | Recompile `FinNovaBank.sol` into `packages/contracts/artifacts/` |
 | `bun run test` | End-to-end API tests (in-memory DB) and smart contract tests (in-process Ganache) |
 | `bun run typecheck` | TypeScript across all workspaces |
@@ -97,15 +99,15 @@ finnova/
 │  │  │  ├─ config.ts          env config
 │  │  │  ├─ schemas.ts         shared OpenAPI/zod schemas
 │  │  │  ├─ db/                schema, client (auto-migrates), seed, reset
-│  │  │  ├─ routes/            auth, wallet, customers, transfers, topups, qr, transactions, webhooks, gateway
-│  │  │  ├─ services/          business logic (ledger, payments, qr, transactions, wallets, customers)
+│  │  │  ├─ routes/            auth, wallet, customers, transfers, topups, qr, transactions, blockchain, webhooks, gateway
+│  │  │  ├─ services/          business logic (ledger, payments, qr, transactions, wallets, customers, chain-accounts)
 │  │  │  ├─ rails/             PaymentRail implementations: internal, card, crypto (stub)
 │  │  │  ├─ gateway/           mock card gateway, checkout page, webhook signatures
 │  │  │  ├─ middleware/        JWT auth
 │  │  │  └─ lib/               errors, ids, formatting, router factory
 │  │  └─ test/                 bun test suites
-│  ├─ web/                     React + Vite frontend (ready)
-│  └─ dapp/                    React + ethers.js DApp for the smart contract (reuses the web design system)
+│  └─ web/                     React + Vite frontend (ready)
+│     └─ src/blockchain/       Blockchain page (DApp): MetaMask, contract, wallet linking (ethers.js, lazy-loaded)
 ├─ packages/
 │  ├─ shared/                  domain constants, money helpers, PaymentRail interface
 │  └─ contracts/               FinNovaBank.sol, compiled ABI, compile/deploy scripts, contract tests
@@ -165,6 +167,23 @@ Pass `returnUrl` (for example `http://localhost:5173/wallet`) to `POST /topups`,
 3. The payer calls `POST /qr/pay`. Settlement and marking the request `PAID` happen in **one DB transaction**, so a QR can't be paid twice. Requests expire (default 15 min) and can be cancelled.
 4. The signature (HMAC over id + amount + payee) rejects forged or tampered codes.
 
+### Blockchain integration
+The FinNova Bank smart contract ([`FinNovaBank.sol`](packages/contracts/contracts/FinNovaBank.sol)) holds ether per blockchain address. The web app talks to it directly through MetaMask; the API knows which address belongs to which customer.
+
+```
+ web app ── /blockchain page ── MetaMask ── ethers.js ──▶ FinNovaBank contract (Ganache :8545)
+    │            │                                               ▲
+    │            └── link wallet, find recipients ──▶ API        │
+    └── dashboard card: balanceOf(linked address) ───────────────┘  (read-only RPC, no MetaMask)
+```
+
+1. **Linking a wallet.** On the Blockchain page the signed-in customer connects MetaMask and clicks *Link wallet to FinNova*. The API returns a message naming the customer, the address, the time and a nonce (`POST /blockchain/account/challenge`). The customer signs it in MetaMask: this is free and sends no transaction. The API recovers the signer from the signature and stores the address only if it matches (`PUT /blockchain/account`, table `chain_accounts`). The nonce is an HMAC under a server secret, so the API stores no challenge state. Challenges expire after 10 minutes, and an address can belong to one customer only.
+2. **Operations.** Deposit, withdraw and transfer are contract calls that MetaMask signs. Their history is read back from the contract's events.
+3. **Paying FinNova customers.** The transfer recipient can be an address, or a customer's **email or phone**. `GET /blockchain/lookup` returns the address the customer linked, and the page shows their name before you send. The same lookup turns addresses in the history into names (*To Bob Nagy*).
+4. **Dashboard.** The *Blockchain account* card shows the linked wallet's balance at the contract next to the EUR wallet. It reads the balance with `balanceOf()` straight from the chain, so MetaMask is not needed for it.
+
+Ether and euros stay separate: on-chain operations don't change the EUR wallet or the ledger. That bridge is the `CryptoRail` (see Payment rails above and the Roadmap).
+
 ## Roadmap
 
 Planned next, in suggested order:
@@ -178,7 +197,7 @@ Planned next, in suggested order:
 | 5 | **Notifications**: in-app bell with unread count for incoming money, paid QR requests and failed top-ups | web + API | Start with polling a `GET /notifications` feed, move to server-sent events if needed. Needs a `notifications` table. |
 | 6 | **Multiple currency accounts** (EUR, USD, HUF, …): one wallet per currency per customer, an account switcher, and currency conversion between your own accounts | web + API | Today the API assumes one EUR wallet per customer (`CURRENCY` constant, `/wallet` returns a single wallet). Needs: a `currency` list in `@finnova/shared`, several wallets per customer (unique per currency), `?currency=`/wallet id on wallet, top-up, transfer, QR and ledger endpoints, per-currency formatting and limits (HUF has no minor unit in practice), a mock FX rate source with a `POST /wallet/convert` that debits one wallet and credits another atomically, and per-currency ledger accounts so each currency still balances. Transfers stay same-currency at first. |
 
-Not planned yet: decentralized payments in the API (`CryptoRail`). The smart contract and DApp run separately from the API for now.
+Not planned yet: on-chain settlement through the API (`CryptoRail`). A chain watcher would turn `Deposited` events of linked wallets into `CRYPTO` top-ups of the EUR wallet, booked against the `crypto_clearing` ledger account. Today the Blockchain page and the API share the customer ↔ wallet link, but ether and euro balances stay separate.
 
 ---
 
@@ -198,6 +217,9 @@ Not planned yet: decentralized payments in the API (`CryptoRail`). The smart con
 | GET | `/qr/:id/image.png` | QR as PNG (public) |
 | POST | `/qr/resolve` · `/qr/pay` | Payer: preview & pay |
 | GET | `/transactions` · `/transactions/:id` | History (filters: type, status, direction; cursor `before`) |
+| POST | `/blockchain/account/challenge` | Start linking a MetaMask wallet: the message to sign |
+| GET / PUT / DELETE | `/blockchain/account` | My linked wallet: get, link (with the signature), unlink |
+| GET | `/blockchain/lookup?q=` | A customer's linked wallet by email, phone or address |
 | POST | `/webhooks/gateway` | Gateway callback (signed) |
 | GET/POST | `/gateway/...` | Mock gateway: checkout page, session, pay |
 
@@ -222,4 +244,11 @@ Every step above can be captured in the web app (`bun run dev:web`); Swagger UI 
 The blockchain labs have their own checklists:
 
 - **Lab 10, smart contract** (Remix, MetaMask, deployment, deposit / withdraw / transfer / balance): see the [contracts README](packages/contracts/README.md#screenshot-checklist-lab-10-deliverable), saved to `docs/screenshots/lab10/`.
-- **Lab 11, DApp** (wallet connection, deposit, transfer, balance, history): see the [DApp README](apps/dapp/README.md#screenshot-checklist-lab-11-deliverable), saved to `docs/screenshots/lab11/`.
+- **Lab 11, DApp** (in the web app, signed in as Alice), saved to `docs/screenshots/lab11/`:
+  1. **Wallet connection:** the Blockchain page before connecting, the MetaMask *Connect* prompt, then the connected card with the network pill (`Localhost (Ganache)`) and the address.
+  2. **Link to FinNova:** *Link wallet to FinNova*, the MetaMask signature request (the message names Alice and the address), then the *Linked* badge.
+  3. **Deposit:** 2 ETH, the MetaMask confirmation, then the green confirmation (block number) and the balance card at 2 ETH.
+  4. **Transfer:** recipient `bob@finnova.test` (the page shows *Bob Nagy* and his address), amount 0.75, the MetaMask confirmation and *Sent 0.75 ETH to Bob Nagy*. Then sign in as Bob, switch MetaMask to account 1 and show *From Alice Kovács* in his history.
+  5. **Balance:** the balance card after the operations (*Check balance* re-reads it), and the dashboard's *Blockchain account* card next to the EUR wallet.
+  6. **Transaction history:** deposits, withdrawals and transfers with names, a filter applied, and the details dialog of one transaction.
+  7. *(optional)* `Insufficient balance` when withdrawing more than the balance, and *Swagger UI → Blockchain* for the API side.

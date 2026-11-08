@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BalanceCard } from "../components/BalanceCard";
 import { Icon, type IconName } from "../components/Icon";
@@ -8,6 +8,9 @@ import { useAsync } from "../hooks/useAsync";
 import { useAuth } from "../hooks/useAuth";
 import { api } from "../lib/api";
 import type { Transaction } from "../lib/types";
+
+// Reads the linked wallet's on-chain balance with ethers, which loads separately from the rest of the app
+const ChainSummaryCard = lazy(() => import("../blockchain/ChainSummaryCard"));
 
 const ACTIONS: { to: string; label: string; icon: IconName }[] = [
   { to: "/topup", label: "Top up", icon: "plus" },
@@ -57,6 +60,9 @@ export function Dashboard() {
               </button>
             ))}
           </div>
+          <Suspense fallback={<Skeleton height={110} />}>
+            <ChainSummaryCard />
+          </Suspense>
         </div>
 
         <div className="card card-flush">

@@ -1,5 +1,8 @@
 import type {
+  ChainAccount,
+  ChainParty,
   Customer,
+  LinkChallenge,
   LedgerEntry,
   Party,
   QrRequest,
@@ -39,7 +42,7 @@ export function setUnauthorizedHandler(handler: (() => void) | null) {
 }
 
 interface RequestOptions {
-  method?: "GET" | "POST" | "PATCH" | "DELETE";
+  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   body?: unknown;
   query?: Record<string, string | number | undefined>;
   idempotencyKey?: string;
@@ -112,6 +115,15 @@ export const api = {
     resolve: (payload: string) => request<QrRequest>("/qr/resolve", { method: "POST", body: { payload } }),
     pay: (payload: string, idempotencyKey: string) =>
       request<Transaction>("/qr/pay", { method: "POST", body: { payload }, idempotencyKey }),
+  },
+  blockchain: {
+    account: () => request<{ account: ChainAccount | null }>("/blockchain/account"),
+    challenge: (address: string) =>
+      request<LinkChallenge>("/blockchain/account/challenge", { method: "POST", body: { address } }),
+    link: (body: { address: string; issuedAt: string; signature: string }) =>
+      request<ChainAccount>("/blockchain/account", { method: "PUT", body }),
+    unlink: () => request<{ account: null }>("/blockchain/account", { method: "DELETE" }),
+    lookup: (q: string) => request<ChainParty>("/blockchain/lookup", { query: { q } }),
   },
   transactions: {
     list: (filters: TransactionFilters = {}) =>

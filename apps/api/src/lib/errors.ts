@@ -17,6 +17,7 @@ export type ErrorCode =
   | "QR_ALREADY_PAID"
   | "GATEWAY_ERROR"
   | "INVALID_SIGNATURE"
+  | "LINK_EXPIRED"
   | "NOT_IMPLEMENTED"
   | "INTERNAL_ERROR";
 

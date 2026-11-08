@@ -1,6 +1,6 @@
-import type { Wallet } from "../hooks/useWallet";
-import { chainName, shortAddress } from "../lib/eth";
-import { Icon, ThemeToggle, useToast } from "../ui";
+import { Icon } from "../components/Icon";
+import { useToast } from "../hooks/useToast";
+import { chainName } from "./eth";
 
 /** Deterministic two-colour gradient per address, so accounts are easy to tell apart. */
 export function AddressAvatar({ address, size = 34 }: { address: string; size?: number }) {
@@ -19,6 +19,7 @@ export function CopyButton({ value, label }: { value: string; label: string }) {
   const toast = useToast();
   return (
     <button
+      type="button"
       className="btn btn-ghost btn-icon"
       aria-label={`Copy ${label}`}
       title={`Copy ${label}`}
@@ -34,31 +35,10 @@ export function CopyButton({ value, label }: { value: string; label: string }) {
   );
 }
 
-export function Topbar({ wallet }: { wallet: Wallet }) {
+export function NetworkPill({ chainId }: { chainId: bigint }) {
   return (
-    <header className="topbar">
-      <div className="logo">
-        <div className="logo-mark">F</div>
-        <span className="hide-sm">FinNova</span> <span className="dapp-tag">DApp</span>
-      </div>
-      <div className="row topbar-right">
-        {wallet.chainId !== null && (
-          <span className="network-pill" title={`Chain ID ${wallet.chainId}`}>
-            <i /> {chainName(wallet.chainId)}
-          </span>
-        )}
-        {wallet.account && (
-          <span className="account-pill">
-            <AddressAvatar address={wallet.account} size={22} />
-            <span className="mono">{shortAddress(wallet.account)}</span>
-            <CopyButton value={wallet.account} label="your address" />
-          </span>
-        )}
-        <ThemeToggle />
-        <button className="btn btn-ghost" onClick={wallet.disconnect} aria-label="Disconnect wallet" title="Disconnect wallet">
-          <Icon name="logout" size={18} />
-        </button>
-      </div>
-    </header>
+    <span className="network-pill" title={`Chain ID ${chainId}`}>
+      <i /> {chainName(chainId)}
+    </span>
   );
 }

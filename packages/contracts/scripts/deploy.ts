@@ -4,13 +4,13 @@ import { ContractFactory, formatEther, JsonRpcProvider, Wallet, type Signer } fr
 import { FINNOVA_BANK_ABI, FINNOVA_BANK_BYTECODE } from "../src";
 
 /**
- * Deploy FinNovaBank to a local chain and point the DApp at it.
+ * Deploy FinNovaBank to a local chain and point the web app's Blockchain page at it.
  *
  *   RPC_URL      default http://127.0.0.1:8545 (`bun run chain`); the Ganache desktop app uses :7545
  *   PRIVATE_KEY  optional deployer key; without it the node's first unlocked account deploys
  */
 const RPC_URL = process.env.RPC_URL ?? "http://127.0.0.1:8545";
-const DAPP_ENV = join(import.meta.dir, "..", "..", "..", "apps", "dapp", ".env.local");
+const WEB_ENV = join(import.meta.dir, "..", "..", "..", "apps", "web", ".env.local");
 
 const provider = new JsonRpcProvider(RPC_URL);
 let network;
@@ -35,11 +35,11 @@ console.log(`FinNovaBank deployed
   deployer  ${deployerAddress} (${formatEther(await provider.getBalance(deployerAddress))} ETH left)
   tx        ${receipt!.hash} in block ${receipt!.blockNumber}, ${receipt!.gasUsed} gas`);
 
-// Keep any other settings in apps/dapp/.env.local and replace only the contract address
-const kept = existsSync(DAPP_ENV)
-  ? readFileSync(DAPP_ENV, "utf8")
+// Keep any other settings in apps/web/.env.local and replace only the contract address
+const kept = existsSync(WEB_ENV)
+  ? readFileSync(WEB_ENV, "utf8")
       .split(/\r?\n/)
       .filter((line) => line && !line.startsWith("VITE_CONTRACT_ADDRESS="))
   : [];
-writeFileSync(DAPP_ENV, [...kept, `VITE_CONTRACT_ADDRESS=${address}`, ""].join("\n"));
-console.log(`\nWrote VITE_CONTRACT_ADDRESS to apps/dapp/.env.local (restart \`bun run dev:dapp\` to pick it up).`);
+writeFileSync(WEB_ENV, [...kept, `VITE_CONTRACT_ADDRESS=${address}`, ""].join("\n"));
+console.log(`\nWrote VITE_CONTRACT_ADDRESS to apps/web/.env.local (restart \`bun run dev:web\` to pick it up).`);

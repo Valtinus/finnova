@@ -10,6 +10,7 @@ import { AppError } from "./lib/errors";
 import { createRouter } from "./lib/router";
 import { createRails } from "./rails";
 import { authRoutes } from "./routes/auth";
+import { blockchainRoutes } from "./routes/blockchain";
 import { customerRoutes } from "./routes/customers";
 import { gatewayRoutes } from "./routes/gateway";
 import { qrRoutes } from "./routes/qr";
@@ -72,6 +73,7 @@ export function createApp(opts: CreateAppOptions = {}) {
     .route("/topups", topupRoutes)
     .route("/qr", qrRoutes)
     .route("/transactions", transactionRoutes)
+    .route("/blockchain", blockchainRoutes)
     .route("/webhooks", webhookRoutes)
     .route("/gateway", gatewayRoutes);
 
@@ -99,6 +101,7 @@ export function createApp(opts: CreateAppOptions = {}) {
       { name: "QR Payments", description: "Request money with a QR code, pay by scanning" },
       { name: "Top-ups (Payment Gateway)", description: "Load money from a card through the payment gateway" },
       { name: "Payment History" },
+      { name: "Blockchain", description: "Link a MetaMask wallet to the account and find customers' wallets for on-chain transfers" },
       { name: "Webhooks", description: "Callbacks from external payment providers" },
       { name: "Mock Payment Gateway (simulated 3rd party)", description: "Stands in for a real card gateway" },
     ],

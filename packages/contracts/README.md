@@ -38,13 +38,13 @@ In **Deploy & run transactions**, set **Environment** to one of these:
 
 | Environment | Use it when |
 |---|---|
-| **Remix VM** (Cancun / Prague) | Quickest test. It runs inside the browser and has 10 accounts with 100 ETH each. The DApp can't reach this chain. |
-| **Injected Provider – MetaMask** | Deploy to the local Ganache chain through MetaMask (see *Local chain + MetaMask* below). MetaMask asks you to confirm each transaction. This is the deployment the DApp (Lab 11) uses. |
+| **Remix VM** (Cancun / Prague) | Quickest test. It runs inside the browser and has 10 accounts with 100 ETH each. The web app's Blockchain page can't reach this chain. |
+| **Injected Provider – MetaMask** | Deploy to the local Ganache chain through MetaMask (see *Local chain + MetaMask* below). MetaMask asks you to confirm each transaction. This is the deployment the Blockchain page of the web app (Lab 11) uses. |
 | **Custom – External Http Provider** (called *Dev – Ganache Provider* in older Remix versions) | Connect Remix straight to Ganache at `http://127.0.0.1:8545`, with no MetaMask prompts. |
 
 ### 3. Deploy
 
-Select `FinNovaBank` under **Contract** and click **Deploy**. The contract appears under **Deployed Contracts** with its address. Copy that address: the DApp needs it.
+Select `FinNovaBank` under **Contract** and click **Deploy**. The contract appears under **Deployed Contracts** with its address. Copy that address: the Blockchain page needs it (paste it under *Smart contract → Change*).
 
 ### 4. Run each operation and check the balances
 
@@ -73,7 +73,7 @@ To see an operation's on-chain record, click its line in the Remix terminal. The
 
 ```bash
 bun run chain               # local Ganache chain on http://127.0.0.1:8545 (chain id 1337), keep it running
-bun run contracts:deploy    # compile output → deploy → writes the address to apps/dapp/.env.local
+bun run contracts:deploy    # compile output → deploy → writes the address to apps/web/.env.local
 bun run --filter '@finnova/contracts' test   # 17 tests on an in-process Ganache chain
 bun run contracts:compile   # recompile after editing the .sol file (updates artifacts/FinNovaBank.json)
 ```
@@ -114,7 +114,7 @@ The chain lives in memory. After a restart, deploy again (and see *Troubleshooti
 | `contracts/FinNovaBank.sol` | The contract |
 | `artifacts/FinNovaBank.json` | ABI and bytecode (committed). A test fails if it's out of date with the `.sol` file. |
 | `scripts/compile.ts` | Compiles with solc-js 0.8.28 (`paris` EVM, optimizer on) |
-| `scripts/deploy.ts` | Deploys to `RPC_URL` and writes `VITE_CONTRACT_ADDRESS` for the DApp |
+| `scripts/deploy.ts` | Deploys to `RPC_URL` and writes `VITE_CONTRACT_ADDRESS` to `apps/web/.env.local` for the Blockchain page |
 | `src/index.ts` | Exports `FINNOVA_BANK_ABI`, `FINNOVA_BANK_BYTECODE`, the typed `FinNovaBank` contract and `describeError()` / `revertReason()` |
 | `test/FinNovaBank.test.ts` | Tests for every operation, balance check, event and revert rule |
 

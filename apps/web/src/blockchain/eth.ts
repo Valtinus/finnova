@@ -1,4 +1,4 @@
-import { formatEther, parseEther, type Eip1193Provider } from "ethers";
+import { formatEther, JsonRpcProvider, parseEther, type Eip1193Provider } from "ethers";
 
 /** MetaMask's injected provider (EIP-1193 plus its event API). */
 export interface InjectedProvider extends Eip1193Provider {
@@ -17,8 +17,23 @@ declare global {
 export const LOCAL_CHAIN = {
   chainId: 1337n,
   name: "Localhost 8545",
-  rpcUrl: "http://127.0.0.1:8545",
+  rpcUrl: (import.meta.env.VITE_RPC_URL as string | undefined) || "http://127.0.0.1:8545",
 };
+
+let readProvider: JsonRpcProvider | null = null;
+
+/**
+ * A read-only connection straight to the local chain, for showing a linked wallet's balance
+ * without MetaMask (e.g. on the dashboard). staticNetwork stops ethers from retrying forever
+ * when the chain is not running; calls then simply fail.
+ */
+export function readOnlyProvider(): JsonRpcProvider {
+  readProvider ??= new JsonRpcProvider(LOCAL_CHAIN.rpcUrl, Number(LOCAL_CHAIN.chainId), {
+    staticNetwork: true,
+    cacheTimeout: -1,
+  });
+  return readProvider;
+}
 
 const CHAIN_NAMES: Record<string, string> = {
   "1": "Ethereum Mainnet",

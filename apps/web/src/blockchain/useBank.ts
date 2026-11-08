@@ -1,7 +1,7 @@
 import { describeError, FINNOVA_BANK_ABI, type FinNovaBank } from "@finnova/contracts";
 import { Contract, EventLog, type ContractTransactionResponse } from "ethers";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { Wallet } from "./useWallet";
+import type { MetaMask } from "./useMetaMask";
 
 export type HistoryKind = "deposit" | "withdrawal" | "sent" | "received";
 
@@ -53,8 +53,8 @@ function toItem(log: EventLog, account: string): HistoryItem {
  * The connected account at the FinNova Bank contract: balances, history and the three operations.
  * Everything is re-read whenever a new block arrives, so transfers from other accounts show up too.
  */
-export function useBank(wallet: Wallet, contractAddress: string | null): Bank {
-  const { provider, signer, account, chainId } = wallet;
+export function useBank(metaMask: MetaMask, contractAddress: string | null): Bank {
+  const { provider, signer, account, chainId } = metaMask;
   const [contractState, setContractState] = useState<ContractState>("no-address");
   const [balance, setBalance] = useState<bigint | null>(null);
   const [walletBalance, setWalletBalance] = useState<bigint | null>(null);

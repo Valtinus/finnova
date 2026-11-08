@@ -16,8 +16,8 @@ function initial(): string | null {
 }
 
 /**
- * Address of the FinNova Bank contract: VITE_CONTRACT_ADDRESS (written by `bun run contracts:deploy`),
- * unless the user pasted another one, e.g. a contract they deployed from Remix.
+ * Address of the FinNova Bank contract: VITE_CONTRACT_ADDRESS in apps/web/.env.local (written by
+ * `bun run contracts:deploy`), unless the user pasted another one, e.g. a contract deployed from Remix.
  */
 export function useContractAddress() {
   const [address, setAddress] = useState<string | null>(initial);

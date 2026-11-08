@@ -1,12 +1,12 @@
 import { describeError } from "@finnova/contracts";
 import { BrowserProvider, getAddress, type JsonRpcSigner } from "ethers";
 import { useCallback, useEffect, useState } from "react";
-import { LOCAL_CHAIN } from "../lib/eth";
+import { LOCAL_CHAIN } from "./eth";
 
-export type WalletStatus = "unavailable" | "disconnected" | "connecting" | "connected";
+export type MetaMaskStatus = "unavailable" | "disconnected" | "connecting" | "connected";
 
-export interface Wallet {
-  status: WalletStatus;
+export interface MetaMask {
+  status: MetaMaskStatus;
   account: string | null;
   chainId: bigint | null;
   provider: BrowserProvider | null;
@@ -33,9 +33,9 @@ async function open(account: string): Promise<Connection> {
 }
 
 /** The user's MetaMask wallet: connection state, active account and network. */
-export function useWallet(): Wallet {
+export function useMetaMask(): MetaMask {
   const injected = typeof window !== "undefined" ? window.ethereum : undefined;
-  const [status, setStatus] = useState<WalletStatus>(injected ? "disconnected" : "unavailable");
+  const [status, setStatus] = useState<MetaMaskStatus>(injected ? "disconnected" : "unavailable");
   const [connection, setConnection] = useState<Connection | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -79,7 +79,7 @@ export function useWallet(): Wallet {
 
   const disconnect = useCallback(async () => {
     // Revoke the site's permission so the next visit asks again; older MetaMask versions don't
-    // support this, in which case the DApp just forgets the account until "Connect" is clicked.
+    // support this, in which case the page just forgets the account until "Connect" is clicked.
     try {
       await injected?.request({ method: "wallet_revokePermissions", params: [{ eth_accounts: {} }] });
     } catch {

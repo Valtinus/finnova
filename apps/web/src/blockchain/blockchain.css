@@ -1,21 +1,7 @@
-/* DApp-only pieces on top of the shared FinNova design system (apps/web/src/styles/index.css) */
+/* Blockchain page and dashboard card, on top of the FinNova design system (styles/index.css).
+   Loaded with the lazily imported blockchain modules. */
 
-.dapp { min-height: 100%; }
-.dapp .main { max-width: 1120px; }
-
-.dapp-tag {
-  font-size: 11px; font-weight: 700; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 6px;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff;
-}
-
-/* ============ Top bar ============ */
-.topbar {
-  position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 12px clamp(16px, 4vw, 32px); background: var(--surface); border-bottom: 1px solid var(--glass-border);
-  -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
-}
-.topbar .logo { padding: 0; }
-.topbar-right { gap: 8px; min-width: 0; }
+/* ============ Wallet / network pills ============ */
 .network-pill, .account-pill {
   display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 999px;
   border: 1px solid var(--glass-border); background: var(--surface-2); font-size: 13px; font-weight: 600; white-space: nowrap;
@@ -25,9 +11,14 @@
 .addr-avatar { display: inline-block; flex: none; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25); }
 .btn-icon { padding: 6px; border-radius: 8px; }
 
-@media (max-width: 720px) {
-  .hide-sm, .network-pill { display: none; }
+/* ============ How it works ============ */
+.steps-list { display: grid; gap: 16px; }
+.steps-list > div { display: flex; gap: 12px; align-items: flex-start; }
+.steps-list .ico {
+  width: 34px; height: 34px; flex: none; border-radius: 10px; display: grid; place-items: center;
+  background: var(--brand-soft); color: var(--brand-ink);
 }
+.steps-list p { margin: 2px 0 0; }
 
 /* ============ Balance card ============ */
 .pill-btn { border: 0; cursor: pointer; }
@@ -51,9 +42,15 @@
 .receipt-box .row { min-width: 0; }
 .status-icon.small-icon { width: 34px; height: 34px; flex: none; background: color-mix(in srgb, var(--ok) 16%, transparent); }
 
-code {
+/* ============ Dashboard card ============ */
+.chain-summary h2 { display: inline-flex; align-items: center; gap: 8px; }
+.chain-summary-balance { text-align: right; white-space: nowrap; }
+.chain-summary-balance strong { font-size: 18px; }
+
+/* ============ Inline code (setup hints) ============ */
+.chain-page code, .chain-summary code {
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.9em; padding: 1px 5px; border-radius: 6px;
   background: var(--surface-2); border: 1px solid var(--line); overflow-wrap: anywhere;
 }
-.alert code { background: transparent; border-color: currentColor; }
-dl.kv { margin: 0; }
+.chain-page .alert code { background: transparent; border-color: currentColor; }
+.chain-page dl.kv { margin: 0; }

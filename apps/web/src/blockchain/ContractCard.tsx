@@ -1,10 +1,11 @@
 import { FINNOVA_BANK_COMPILER } from "@finnova/contracts";
 import { isAddress } from "ethers";
 import { useState, type FormEvent } from "react";
-import type { Bank } from "../hooks/useBank";
-import { chainName, formatEth, shortAddress } from "../lib/eth";
-import { Alert, Icon, Modal } from "../ui";
-import { CopyButton } from "./Topbar";
+import { Icon } from "../components/Icon";
+import { Alert, Modal } from "../components/ui";
+import { CopyButton } from "./AddressBits";
+import { chainName, formatEth, shortAddress } from "./eth";
+import type { Bank } from "./useBank";
 
 interface Props {
   bank: Bank;
@@ -14,7 +15,7 @@ interface Props {
   onChange(address: string | null): void;
 }
 
-/** Which contract the DApp talks to, with a dialog to point it at another deployment. */
+/** Which contract the page talks to, with a dialog to point it at another deployment. */
 export function ContractCard({ bank, address, fromEnv, chainId, onChange }: Props) {
   const [editing, setEditing] = useState(false);
 

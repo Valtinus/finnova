@@ -12,6 +12,7 @@ const NAV: { to: string; label: string; icon: IconName; end?: boolean }[] = [
   { to: "/topup", label: "Top up", icon: "plus" },
   { to: "/history", label: "Activity", icon: "history" },
   { to: "/wallet", label: "Wallet", icon: "wallet" },
+  { to: "/blockchain", label: "Blockchain", icon: "box" },
 ];
 
 const MOBILE_NAV: { to: string; label: string; icon: IconName; end?: boolean; fab?: boolean }[] = [

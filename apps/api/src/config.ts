@@ -7,6 +7,9 @@ export interface AppConfig {
   jwtExpiresInSeconds: number;
   qrSigningSecret: string;
   gatewayWebhookSecret: string;
+  /** signs the message a customer signs to link a blockchain wallet */
+  walletLinkSecret: string;
+  walletLinkTtlSeconds: number;
   corsOrigins: string[];
   qrDefaultTtlSeconds: number;
 }
@@ -22,6 +25,8 @@ export function loadConfig(overrides: Partial<AppConfig> = {}): AppConfig {
     jwtExpiresInSeconds: Number(env.JWT_EXPIRES_IN_SECONDS ?? 86_400),
     qrSigningSecret: env.QR_SIGNING_SECRET ?? "dev-qr-secret-change-me",
     gatewayWebhookSecret: env.GATEWAY_WEBHOOK_SECRET ?? "dev-gateway-webhook-secret",
+    walletLinkSecret: env.WALLET_LINK_SECRET ?? "dev-wallet-link-secret-change-me",
+    walletLinkTtlSeconds: Number(env.WALLET_LINK_TTL_SECONDS ?? 600),
     corsOrigins: (env.CORS_ORIGINS ?? "http://localhost:5173")
       .split(",")
       .map((s) => s.trim())

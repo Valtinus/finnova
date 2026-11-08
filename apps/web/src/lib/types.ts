@@ -98,6 +98,28 @@ export interface Topup {
   checkoutUrl: string | null;
 }
 
+/** A blockchain wallet linked to the FinNova account (see apps/api/src/services/chain-accounts.ts). */
+export interface ChainAccount {
+  address: string;
+  linkedAt: string;
+}
+
+export interface LinkChallenge {
+  address: string;
+  /** the exact text to sign in MetaMask */
+  message: string;
+  issuedAt: string;
+  expiresAt: string;
+}
+
+/** A FinNova customer and the wallet they linked. */
+export interface ChainParty {
+  customerId: string;
+  name: string;
+  email: string;
+  address: string;
+}
+
 export interface TransactionFilters {
   type?: TransactionType;
   status?: TransactionStatus;

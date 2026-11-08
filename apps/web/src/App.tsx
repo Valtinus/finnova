@@ -1,6 +1,8 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { GuestOnly, RequireAuth } from "./components/RequireAuth";
+import { PageSpinner } from "./components/ui";
 import { AuthProvider } from "./hooks/useAuth";
 import { ToastProvider } from "./hooks/useToast";
 import { LoginPage, RegisterPage } from "./pages/AuthPages";
@@ -11,6 +13,9 @@ import { Scan } from "./pages/Scan";
 import { Send } from "./pages/Send";
 import { TopUp } from "./pages/TopUp";
 import { WalletPage } from "./pages/WalletPage";
+
+// The blockchain page pulls in ethers and the contract ABI, so it is only loaded when opened
+const BlockchainPage = lazy(() => import("./pages/Blockchain"));
 
 export default function App() {
   return (
@@ -31,6 +36,14 @@ export default function App() {
                 <Route path="scan" element={<Scan />} />
                 <Route path="history" element={<History />} />
                 <Route path="wallet" element={<WalletPage />} />
+                <Route
+                  path="blockchain"
+                  element={
+                    <Suspense fallback={<PageSpinner />}>
+                      <BlockchainPage />
+                    </Suspense>
+                  }
+                />
               </Route>
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
